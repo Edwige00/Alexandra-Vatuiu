@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TANDA - Smart Recipe Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="logo">
+                <i class="fas fa-utensils"></i>
+                <span>TANDA</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#quiz">Quiz</a></li>
+                <li><a href="#recipes">Recipes</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>Create Perfect Recipes with What You Have</h1>
+            <p>Whether you're a student, busy parent, or cooking beginner - discover delicious, budget-friendly recipes tailored to your needs, ingredients, and dietary preferences.</p>
+            <button class="cta-button" onclick="startQuiz()">
+                <i class="fas fa-play"></i>
+                Start Your Recipe Journey
+            </button>
+        </div>
+        <div class="hero-image">
+            <div class="cooking-illustration">
+                <i class="fas fa-chef-hat"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section id="quiz" class="quiz-section">
+        <div class="container">
+            <h2>Find Your Perfect Recipe</h2>
+            <p class="quiz-subtitle">Answer a few questions to get personalized recipe recommendations</p>
+            
+            <div class="quiz-container" id="quizContainer">
+                <div class="progress-bar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                
+                <div class="question-container" id="questionContainer">
+                    <!-- Questions will be populated by JavaScript -->
+                </div>
+                
+                <div class="quiz-navigation">
+                    <button class="btn-secondary" id="prevBtn" onclick="previousQuestion()" style="display: none;">Previous</button>
+                    <button class="btn-primary" id="nextBtn" onclick="nextQuestion()">Next</button>
+                </div>
+            </div>
+
+            <div class="quiz-results" id="quizResults" style="display: none;">
+                <h3>Your Personalized Recommendations</h3>
+                <div class="results-summary" id="resultsSummary"></div>
+                <div class="recommended-recipes" id="recommendedRecipes"></div>
+                <button class="btn-primary" onclick="restartQuiz()">Take Quiz Again</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Recipes Section -->
+    <section id="recipes" class="recipes-section">
+        <div class="container">
+            <h2>Recipe Collection</h2>
+            <div class="filters">
+                <div class="filter-group">
+                    <label>Dietary Requirements:</label>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="vegetarian">Vegetarian</button>
+                        <button class="filter-btn" data-filter="vegan">Vegan</button>
+                        <button class="filter-btn" data-filter="gluten-free">Gluten-Free</button>
+                        <button class="filter-btn" data-filter="diabetic">Diabetic-Friendly</button>
+                    </div>
+                </div>
+                <div class="search-bar">
+                    <input type="text" id="ingredientSearch" placeholder="Enter ingredients you have (e.g., chicken, rice, tomatoes)">
+                    <button onclick="searchByIngredients()"><i class="fas fa-search"></i></button>
+                </div>
+            </div>
+            
+            <div class="recipes-grid" id="recipesGrid">
+                <!-- Recipes will be populated by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+        <div class="container">
+            <h2>About TANDA</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Cooking Made Simple and Affordable</h3>
+                    <p>TANDA is designed for everyone who wants to cook delicious meals without breaking the bank or spending hours in the kitchen. Whether you're a student living on a tight budget, a busy parent juggling multiple responsibilities, or someone just starting their cooking journey, we're here to help.</p>
+                    
+                    <div class="features">
+                        <div class="feature">
+                            <i class="fas fa-dollar-sign"></i>
+                            <h4>Budget-Friendly</h4>
+                            <p>Recipes designed to be economical and use common ingredients</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-clock"></i>
+                            <h4>Quick & Easy</h4>
+                            <p>Simple recipes that don't require advanced cooking skills</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-leaf"></i>
+                            <h4>Dietary Inclusive</h4>
+                            <p>Options for vegetarian, vegan, gluten-free, and diabetic needs</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-refrigerator"></i>
+                            <h4>Use What You Have</h4>
+                            <p>Find recipes based on ingredients already in your fridge</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="logo">
+                        <i class="fas fa-utensils"></i>
+                        <span>TANDA</span>
+                    </div>
+                    <p>Making cooking accessible, affordable, and enjoyable for everyone.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#quiz">Take Quiz</a></li>
+                        <li><a href="#recipes">Browse Recipes</a></li>
+                        <li><a href="#about">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    <p>Have suggestions or feedback?</p>
+                    <p>We'd love to hear from you!</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 TANDA. Made with ❤️ for home cooks everywhere.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
