@@ -1,0 +1,662 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TANDA – Cook Smart. Eat Well.</title>
+  <meta name="description" content="TANDA: Cook smart, eat well. Quiz your needs, scan your fridge, and get budget‑friendly recipes and shopping lists." />
+  <style>
+    /* ----------------------------
+       TANDA — Brand & Base Styles
+       ---------------------------- */
+    :root{
+      --ink:#0E3A47;         /* deep teal outline */
+      --teal:#17A2A3;        /* fridge teal */
+      --purple:#7B6CDC;      /* fridge top purple */
+      --orange:#F59E0B;      /* carrot/orange */
+      --red:#EF4444;         /* accent red */
+      --green:#10B981;       /* broccoli green */
+      --yellow:#FBBF24;      /* warm yellow */
+      --sand:#F5F1E9;        /* paper-like bg */
+      --ink-70:rgba(14,58,71,.7);
+      --radius-xl:24px;
+      --radius-lg:18px;
+      --radius:12px;
+      --shadow:0 8px 30px rgba(14,58,71,.08),0 2px 10px rgba(14,58,71,.06);
+      --shadow-sm:0 3px 10px rgba(14,58,71,.08);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--ink);
+      background:var(--sand);
+      line-height:1.5;
+    }
+    h1,h2,h3{line-height:1.15;margin:0 0 .5rem}
+    h1{font-size:clamp(2rem,3vw+1rem,3rem);}
+    h2{font-size:clamp(1.4rem,1.3vw+1rem,2rem)}
+    p{margin:.5rem 0 1rem}
+    a{color:var(--teal);text-decoration:none}
+    a:hover{text-decoration:underline}
+    .container{max-width:1200px;margin:0 auto;padding:0 20px}
+    .btn{display:inline-flex;align-items:center;gap:.5rem;background:var(--teal);color:#fff;border:none;padding:.9rem 1.1rem;border-radius:999px;font-weight:700;cursor:pointer;box-shadow:var(--shadow-sm)}
+    .btn:hover{filter:brightness(.95)}
+    .btn.secondary{background:#fff;color:var(--ink);border:2px solid var(--ink);}
+    .kicker{letter-spacing:.08em;text-transform:uppercase;color:var(--ink-70);font-weight:800;font-size:.75rem}
+
+    /* ---------------------------- Navbar ---------------------------- */
+    .nav{position:sticky;top:0;z-index:50;background:rgba(245,241,233,.8);backdrop-filter:saturate(140%) blur(8px);border-bottom:1px solid rgba(14,58,71,.08)}
+    .nav .inner{display:flex;align-items:center;justify-content:space-between;padding:.6rem 0}
+    .brand{display:flex;align-items:center;gap:.8rem;font-weight:900}
+    .brand .word{font-size:1.25rem;letter-spacing:.5px}
+    .nav a{padding:.4rem .8rem;border-radius:999px}
+    .nav a:hover{background:rgba(14,58,71,.06)}
+    .navlinks{display:flex;gap:.2rem;align-items:center}
+
+    /* ---------------------------- Hero ---------------------------- */
+    .hero{position:relative;overflow:hidden}
+    .hero .inner{display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center;padding:60px 0}
+    .tagline{font-size:clamp(1rem,1.2vw+1rem,1.35rem);color:var(--ink-70)}
+    .card{background:#fff;border-radius:var(--radius-xl);box-shadow:var(--shadow);padding:24px}
+    .pillrow{display:flex;flex-wrap:wrap;gap:.6rem;margin:1rem 0}
+    .pill{display:inline-flex;align-items:center;gap:.4rem;background:rgba(14,58,71,.06);border:1px solid rgba(14,58,71,.08);padding:.5rem .8rem;border-radius:999px;font-weight:700}
+    .pill svg{opacity:.8}
+    .art{position:relative;border-radius:var(--radius-xl);background:linear-gradient(180deg, #ffffff, #f6f6f3);box-shadow:var(--shadow);padding:24px;min-height:320px;display:grid;place-items:center}
+
+    /* Fridge logo-like SVG container */
+    .logo-badge{display:inline-flex;align-items:center;gap:.8rem;background:#fff;border-radius:999px;border:2px solid var(--ink);padding:.3rem .8rem}
+    .logo-text span:nth-child(1){color:#0B7F58;font-weight:900}
+    .logo-text span:nth-child(2){color:#E94F37;font-weight:900}
+    .logo-text span:nth-child(3){color:#F59E0B;font-weight:900}
+    .logo-text span:nth-child(4){color:#17A2A3;font-weight:900}
+    .logo-text span:nth-child(5){color:#FBBF24;font-weight:900}
+
+    /* ---------------------------- Sections ---------------------------- */
+    section{scroll-margin-top:80px}
+    .grid{display:grid;gap:20px}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .feature{display:flex;gap:14px}
+    .feature svg{flex:0 0 44px}
+
+    /* ---------------------------- Quiz & Fridge ---------------------------- */
+    form .row{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;margin:12px 0}
+    label{font-weight:700;font-size:.95rem}
+    .field{background:#fff;border:1px solid rgba(14,58,71,.1);border-radius:var(--radius);padding:10px;display:flex;align-items:center;gap:.6rem}
+    input[type=number], input[type=text], input[type=range], select{width:100%;border:0;outline:none;font-size:1rem;background:transparent}
+    .chips{display:flex;flex-wrap:wrap;gap:.5rem}
+    .chip{display:inline-flex;align-items:center;gap:.4rem;border:1px solid rgba(14,58,71,.15);background:var(--sand);border-radius:999px;padding:.35rem .6rem;font-weight:600}
+    .chip button{border:0;background:rgba(14,58,71,.12);width:22px;height:22px;border-radius:999px;cursor:pointer}
+    .controls{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:12px}
+
+    .detector{border:2px dashed rgba(14,58,71,.2);border-radius:var(--radius-lg);padding:14px;display:grid;place-items:center;min-height:140px;background:#fff}
+    .detector.drag{background:linear-gradient(180deg,#fff,#f8faf9)}
+
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+
+    /* ---------------------------- Recipes ---------------------------- */
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .recipe{background:#fff;border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column}
+    .recipe .meta{display:flex;gap:8px;flex-wrap:wrap;margin:.4rem 0 .6rem}
+    .badge{display:inline-flex;align-items:center;gap:.35rem;border-radius:999px;padding:.28rem .6rem;border:1px solid rgba(14,58,71,.12);background:rgba(14,58,71,.04);font-size:.85rem;font-weight:700}
+    .recipe .ing{font-size:.95rem}
+    .recipe footer{margin-top:auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .select-toggle{appearance:none;border:2px solid var(--teal);background:transparent;color:var(--teal);font-weight:800;border-radius:999px;padding:.5rem .8rem;cursor:pointer}
+    .select-toggle[aria-pressed=true]{background:var(--teal);color:#fff}
+
+    /* ---------------------------- Plan Summary ---------------------------- */
+    .summary{background:#fff;border-radius:var(--radius-xl);box-shadow:var(--shadow);padding:18px}
+    .list{columns:2;gap:24px}
+    .list li{break-inside:avoid}
+    .totals{display:flex;gap:16px;flex-wrap:wrap}
+
+    /* ---------------------------- Footer ---------------------------- */
+    footer.site{margin-top:60px;border-top:1px solid rgba(14,58,71,.08);padding:24px 0;color:var(--ink-70)}
+
+    /* ---------------------------- Responsive ---------------------------- */
+    @media (max-width: 980px){
+      .hero .inner{grid-template-columns:1fr;}
+      .grid-3{grid-template-columns:1fr 1fr}
+      .cards{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 680px){
+      .grid-2,.grid-3{grid-template-columns:1fr}
+      .cards{grid-template-columns:1fr}
+      .list{columns:1}
+    }
+  </style>
+</head>
+<body>
+  <!-- ---------------------------- NAVBAR ---------------------------- -->
+  <nav class="nav" aria-label="Primary">
+    <div class="inner container">
+      <div class="brand">
+        <span class="logo-badge" aria-hidden="true">
+          <!-- Inline SVG logo-ish icon to match your uploaded logo vibe -->
+          <svg width="34" height="34" viewBox="0 0 72 72" role="img" aria-label="TANDA fridge icon">
+            <rect x="12" y="8" width="36" height="56" rx="8" fill="var(--teal)" stroke="var(--ink)" stroke-width="4" />
+            <rect x="12" y="8" width="36" height="24" rx="8" fill="var(--purple)" stroke="var(--ink)" stroke-width="4" />
+            <rect x="44" y="21" width="10" height="4" rx="2" fill="var(--orange)" stroke="var(--ink)" stroke-width="2" />
+            <rect x="44" y="44" width="6" height="10" rx="2" fill="var(--yellow)" stroke="var(--ink)" stroke-width="2" />
+            <circle cx="58" cy="26" r="12" fill="none" stroke="var(--ink)" stroke-width="4" />
+            <circle cx="58" cy="26" r="8" fill="#fff" stroke="var(--orange)" stroke-width="3" />
+            <path d="M59 23c-2-3-6-2-7 1c1 2 2 3 4 4c2 0 3-1 3-2z" fill="var(--green)" stroke="var(--ink)" stroke-width="1" />
+            <path d="M55 30l-2 3" stroke="var(--green)" stroke-width="2" />
+            <path d="M61 30c-2 0-3 2-4 3l4 3c1-1 2-3 2-4c0-1-1-2-2-2z" fill="var(--orange)" stroke="var(--ink)" stroke-width="1" />
+          </svg>
+          <strong class="logo-text" aria-hidden="true"><span>T</span><span>A</span><span>N</span><span>D</span><span>A</span></strong>
+        </span>
+        <span class="word" aria-hidden="true">Cook Smart. Eat Well.</span>
+      </div>
+      <div class="navlinks" role="navigation">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#quiz">Quiz</a>
+        <a href="#fridge">Fridge Scan</a>
+        <a href="#recipes">Recipes</a>
+        <a href="#plan">Plan</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ---------------------------- HERO ---------------------------- -->
+  <header class="hero">
+    <div class="inner container">
+      <div>
+        <p class="kicker">Meet TANDA</p>
+        <h1>Smarter meal planning for real life</h1>
+        <p class="tagline">Tell us your diet and budget, scan your fridge, and we’ll build a varied, affordable menu for the week—plus a smart shopping list.</p>
+        <div class="pillrow" aria-hidden="true">
+          <span class="pill"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Time‑savvy</span>
+          <span class="pill"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>Budget‑friendly</span>
+          <span class="pill"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>Delicious</span>
+        </div>
+        <div class="actions">
+          <a class="btn" href="#quiz">Start the quiz</a>
+          <a class="btn secondary" href="#fridge">Scan your fridge</a>
+        </div>
+      </div>
+      <div class="art" aria-hidden="true">
+        <!-- decorative illustration: fridge + magnifier -->
+       <img style="width:300px"  src="https://github.com/Edwige00/Alexandra-Vatuiu/blob/main/d1a6568a-3cc3-4d51-86cb-041d4fcb6328.png?raw=true"/>
+      </div>
+    </div>
+  </header>
+
+  <!-- ---------------------------- FEATURES ---------------------------- -->
+  <section id="features" class="container">
+    <p class="kicker">Why TANDA</p>
+    <h2>Everything you need to feed your family well</h2>
+    <div class="grid grid-3" style="margin-top:16px">
+      <div class="card feature">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 4h18v6H3z"/><path d="M7 20V10M17 20V10"/></svg>
+        <div>
+          <h3>Plan a whole week</h3>
+          <p>Pick how many days and servings—TANDA balances variety and repeats to cut waste.</p>
+        </div>
+      </div>
+      <div class="card feature">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <div>
+          <h3>Scan your fridge</h3>
+          <p>Upload a photo—our demo “AI” pulls likely ingredients so you cook what you already have.</p>
+        </div>
+      </div>
+      <div class="card feature">
+        <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h10"/></svg>
+        <div>
+          <h3>Smart shopping list</h3>
+          <p>Only the missing items, sized to your servings, with a running budget estimate.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------------------------- HOW IT WORKS ---------------------------- -->
+  <section id="how" class="container">
+    <p class="kicker">How it works</p>
+    <div class="grid grid-4 grid-2">
+      <div class="card">
+        <h3>1) Tell us your needs</h3>
+        <p>Diet type, allergies, time, calories, budget, and how many people.</p>
+      </div>
+      <div class="card">
+        <h3>2) Scan or add ingredients</h3>
+        <p>Upload a fridge photo or type them in. We’ll prioritize recipes that use those first.</p>
+      </div>
+      <div class="card">
+        <h3>3) Get recipes</h3>
+        <p>We filter a recipe library to fit your constraints and suggest a varied plan.</p>
+      </div>
+      <div class="card">
+        <h3>4) Shop smarter</h3>
+        <p>Auto-build a shopping list that fits your budget. Export or print in one tap.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------------------------- QUIZ ---------------------------- -->
+  <section id="quiz" class="container">
+    <p class="kicker">Step 1</p>
+    <h2>Quick quiz: your household & goals</h2>
+    <form id="quizForm" onsubmit="return false" aria-describedby="quizHelp">
+      <p id="quizHelp" class="tagline">These settings guide recipe recommendations and the shopping list.</p>
+
+      <div class="row">
+        <div style="grid-column:span 4">
+          <label for="servings">Servings (people)</label>
+          <div class="field"><input type="number" id="servings" min="1" max="10" value="3" /></div>
+        </div>
+        <div style="grid-column:span 4">
+          <label for="days">Days to plan</label>
+          <div class="field"><input type="number" id="days" min="1" max="7" value="5" /></div>
+        </div>
+        <div style="grid-column:span 4">
+          <label for="budget">Budget (total)</label>
+          <div class="field"><span>£</span><input type="number" id="budget" min="5" max="200" value="25" step="1" /></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div style="grid-column:span 6">
+          <label>Diet type (choose any)</label>
+          <div class="controls" id="dietChoices" role="group" aria-label="Diet types"></div>
+        </div>
+        <div style="grid-column:span 6">
+          <label>Allergies (choose any)</label>
+          <div class="controls" id="allergyChoices" role="group" aria-label="Allergies"></div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div style="grid-column:span 6">
+          <label for="time">Max cook time: <strong><span id="timeVal">30</span> min</strong></label>
+          <div class="field"><input type="range" id="time" min="10" max="60" step="5" value="30" oninput="timeVal.textContent=this.value" /></div>
+        </div>
+        <div style="grid-column:span 6">
+          <label for="calories">Target calories / serving: <strong><span id="calVal">600</span> kcal</strong></label>
+          <div class="field"><input type="range" id="calories" min="300" max="900" step="50" value="600" oninput="calVal.textContent=this.value" /></div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="saveQuiz">Save preferences</button>
+        <button class="btn secondary" id="resetQuiz" type="button">Reset</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ---------------------------- FRIDGE SCAN ---------------------------- -->
+  <section id="fridge" class="container">
+    <p class="kicker">Step 2</p>
+    <h2>What ingredients do you already have?</h2>
+
+    <div class="row">
+      <div style="grid-column:span 7">
+        <label for="detector">Upload a fridge / pantry photo</label>
+        <div class="detector" id="dropzone" aria-live="polite">
+          <div>
+            <p><strong>Drop image here</strong> or <label class="btn" for="fileInput" style="cursor:pointer">Choose file</label></p>
+            <input id="fileInput" type="file" accept="image/*" hidden />
+            <p class="tagline">Demo “AI” looks at the filename first, otherwise it guesses a few common items.</p>
+          </div>
+        </div>
+      </div>
+      <div style="grid-column:span 5">
+        <label for="manualIng">Add ingredients manually</label>
+        <div class="field"><input id="manualIng" type="text" list="ingList" placeholder="e.g., tomato" /><button class="btn" id="addIng" type="button">Add</button></div>
+        <datalist id="ingList"></datalist>
+        <div class="chips" id="ingChips" aria-live="polite" aria-label="Your ingredients"></div>
+        <div class="actions">
+          <button class="btn secondary" id="clearIng" type="button">Clear</button>
+          <button class="btn" id="genPlan" type="button">Generate plan</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------------------------- RECIPES ---------------------------- -->
+  <section id="recipes" class="container">
+    <p class="kicker">Step 3</p>
+    <h2>Recipe suggestions</h2>
+    <p class="tagline">We favour recipes matching your diet, time and calories, and those using your ingredients. Toggle any to include in your weekly plan.</p>
+    <div id="recipeCards" class="cards" aria-live="polite"></div>
+  </section>
+
+  <!-- ---------------------------- PLAN SUMMARY ---------------------------- -->
+  <section id="plan" class="container">
+    <p class="kicker">Step 4</p>
+    <h2>Your plan & shopping list</h2>
+    <div class="summary">
+      <div class="totals">
+        <div><strong>Selected recipes:</strong> <span id="selCount">0</span></div>
+        <div><strong>Estimated basket:</strong> <span id="basket">£0.00</span> (<span id="budgetLeft">£0.00</span> left)</div>
+      </div>
+      <h3>Missing ingredients</h3>
+      <ul id="shopList" class="list"></ul>
+      <div class="actions">
+        <button class="btn" id="exportList" type="button">Export list (.txt)</button>
+        <button class="btn secondary" id="printList" type="button">Print</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site">
+    <div class="container">
+      <p><strong>TANDA</strong> — Cook Smart. Eat Well. Built as a prototype. Replace demo detection with your preferred AI/vision API when ready.</p>
+    </div>
+  </footer>
+
+  <!-- ---------------------------- DATA & LOGIC ---------------------------- -->
+  <script>
+  // ------- Ingredient universe for suggestions -------
+  const ALL_INGREDIENTS = [
+    "tomato","onion","garlic","carrot","broccoli","spinach","courgette","pepper",
+    "potato","sweet potato","mushroom","peas","corn","aubergine","chickpeas","lentils",
+    "beans","rice","pasta","quinoa","oats","flour","milk","egg","cheese","yogurt",
+    "butter","olive oil","chicken","turkey","beef","pork","salmon","tuna","tofu",
+    "tempeh","prawns","breadcrumbs","soy sauce","coconut milk","curry paste","basil","parsley",
+    "coriander","ginger","lemon","lime","chilli","paprika","cumin","turmeric","cinnamon",
+    "sugar","salt","pepper","honey","maple syrup","kale","lettuce","cucumber"
+  ];
+  const COST_TABLE = {
+    tomato:0.35,onion:0.15,garlic:0.05,carrot:0.20,broccoli:0.90,spinach:1.00,courgette:0.60,pepper:0.60,
+    potato:0.30,"sweet potato":0.50,mushroom:0.80,peas:0.60,corn:0.60,aubergine:0.90,chickpeas:0.60,lentils:0.50,
+    beans:0.60,rice:0.40,pasta:0.50,quinoa:0.90,oats:0.40,flour:0.40,milk:0.70,egg:0.25,cheese:1.20,yogurt:0.60,
+    butter:0.60,"olive oil":0.20,chicken:2.00,turkey:2.10,beef:2.50,pork:2.20,salmon:3.20,tuna:1.20,tofu:1.20,
+    tempeh:1.50,prawns:2.80,breadcrumbs:0.30,"soy sauce":0.20,"coconut milk":1.00,"curry paste":0.50,basil:0.30,
+    parsley:0.30,coriander:0.30,ginger:0.30,lemon:0.40,lime:0.40,chilli:0.20,paprika:0.20,cumin:0.20,turmeric:0.20,
+    cinnamon:0.20,sugar:0.20,salt:0.05,pepper:0.05,honey:0.80,"maple syrup":1.20,kale:1.00,lettuce:0.90,cucumber:0.60
+  };
+  const RECIPE_DB = [
+    {id:"veg-pasta",title:"Rainbow Veggie Pasta",calories:550,pricePerServing:1.8,diet:["vegetarian"],time:25,cuisine:"italian",ingredients:["pasta","tomato","garlic","courgette","pepper","olive oil","basil"],steps:["Boil pasta until al dente.","Sauté garlic, tomatoes, courgette and pepper in olive oil.","Toss pasta with veg; finish with basil."]},
+    {id:"vegan-curry",title:"Creamy Chickpea Curry",calories:480,pricePerServing:1.6,diet:["vegan","dairy-free","gluten-free"],time:30,cuisine:"indian",ingredients:["chickpeas","onion","garlic","ginger","curry paste","coconut milk"],steps:["Sauté onion, garlic, and ginger.","Add curry paste and chickpeas; stir.","Pour coconut milk; simmer until thick."]},
+    {id:"gf-frittata",title:"Garden Veg Frittata",calories:420,pricePerServing:1.3,diet:["gluten-free"],time:20,cuisine:"mediterranean",ingredients:["egg","spinach","onion","mushroom","cheese"],steps:["Whisk eggs.","Sauté veg.","Add eggs and cheese; bake until set."]},
+    {id:"lowcal-salmon",title:"Zesty Sheet‑Pan Salmon",calories:390,pricePerServing:2.9,diet:["pescatarian","low-calorie","gluten-free"],time:22,cuisine:"global",ingredients:["salmon","broccoli","lemon","olive oil","salt","pepper"],steps:["Tray up salmon and broccoli.","Season with lemon, oil, salt and pepper.","Roast until flaky."]},
+    {id:"tofu-stirfry",title:"5‑Minute Tofu Stir‑Fry",calories:420,pricePerServing:1.2,diet:["vegan","gluten-free"],time:15,cuisine:"asian",ingredients:["tofu","soy sauce","garlic","broccoli","carrot"],steps:["Sear tofu.","Stir-fry veg.","Splash soy sauce and serve."]},
+    {id:"diabetic-chilli",title:"Lean Turkey Chilli",calories:450,pricePerServing:2.0,diet:["diabetic-friendly","gluten-free"],time:35,cuisine:"american",ingredients:["turkey","beans","tomato","onion","chilli","cumin"],steps:["Brown turkey.","Add spices and veg.","Simmer with beans and tomato."]},
+    {id:"gf-risotto",title:"Lemon Pea Risotto",calories:520,pricePerServing:1.9,diet:["vegetarian","gluten-free"],time:28,cuisine:"italian",ingredients:["rice","peas","onion","garlic","lemon","butter"],steps:["Toast rice.","Add stock gradually with peas.","Finish with lemon and butter."]},
+    {id:"soup-lentil",title:"One‑Pot Lentil Soup",calories:380,pricePerServing:0.9,diet:["vegan","low-calorie","gluten-free"],time:30,cuisine:"middle eastern",ingredients:["lentils","carrot","onion","garlic","cumin","lemon"],steps:["Sauté aromatics.","Add lentils and water.","Simmer until soft; finish with lemon."]},
+    {id:"pasta-tuna",title:"Pantry Tuna Pasta",calories:520,pricePerServing:1.1,diet:["pescatarian"],time:18,cuisine:"italian",ingredients:["pasta","tuna","olive oil","garlic","lemon","parsley"],steps:["Cook pasta.","Warm tuna in oil with garlic.","Toss with lemon and parsley."]},
+    {id:"bowl-quinoa",title:"Quinoa Power Bowl",calories:480,pricePerServing:1.7,diet:["vegan","gluten-free","low-calorie"],time:25,cuisine:"global",ingredients:["quinoa","spinach","chickpeas","carrot","lemon","olive oil"],steps:["Cook quinoa.","Toss with veg and chickpeas.","Dress with lemon and oil."]},
+    {id:"sheet-chicken",title:"Herby Sheet‑Pan Chicken",calories:560,pricePerServing:2.1,diet:["high-protein","gluten-free"],time:30,cuisine:"mediterranean",ingredients:["chicken","potato","courgette","lemon","olive oil","oregano"],steps:["Tray chicken and veg.","Season well.","Roast until golden."]},
+    {id:"omelette",title:"Cheesy 3‑Egg Omelette",calories:430,pricePerServing:0.8,diet:["gluten-free","vegetarian"],time:10,cuisine:"french",ingredients:["egg","cheese","butter","pepper"],steps:["Beat eggs.","Melt butter.","Cook gently; add cheese and fold."]}
+  ];
+
+  // ------- State -------
+  const state = {
+    servings: 3, days: 5, budget: 25, time: 30, calories: 600,
+    diet: [], allergies: [],
+    ingredients: ["onion","garlic","pasta","tomato"],
+    selected: new Set(),
+  };
+
+  // ------- Elements -------
+  const dietChoices = document.getElementById('dietChoices');
+  const allergyChoices = document.getElementById('allergyChoices');
+  const ingChips = document.getElementById('ingChips');
+  const manualIng = document.getElementById('manualIng');
+  const ingList = document.getElementById('ingList');
+  const fileInput = document.getElementById('fileInput');
+  const dropzone = document.getElementById('dropzone');
+  const recipeCards = document.getElementById('recipeCards');
+  const shopList = document.getElementById('shopList');
+  const selCount = document.getElementById('selCount');
+  const basketEl = document.getElementById('basket');
+  const budgetLeft = document.getElementById('budgetLeft');
+
+  // ------- Inputs -------
+  const servings = document.getElementById('servings');
+  const days = document.getElementById('days');
+  const budget = document.getElementById('budget');
+  const timeRange = document.getElementById('time');
+  const calRange = document.getElementById('calories');
+
+  document.getElementById('saveQuiz').addEventListener('click', () => {
+    persist();
+    announce("Preferences saved.");
+  });
+  document.getElementById('resetQuiz').addEventListener('click', () => {
+    localStorage.removeItem('tanda-plan');
+    location.reload();
+  });
+  document.getElementById('clearIng').addEventListener('click', () => { state.ingredients = []; renderIngredients(); updatePlan(); });
+  document.getElementById('addIng').addEventListener('click', addIngredientFromInput);
+  manualIng.addEventListener('keydown', e => { if(e.key==='Enter'){ e.preventDefault(); addIngredientFromInput(); }});
+  document.getElementById('genPlan').addEventListener('click', () => { generateSuggestions(); window.location.hash = '#recipes'; });
+  document.getElementById('exportList').addEventListener('click', exportListTxt);
+  document.getElementById('printList').addEventListener('click', () => window.print());
+
+  // Populate suggestions for datalist
+  ALL_INGREDIENTS.forEach(i=>{
+    const o=document.createElement('option');o.value=i;ingList.appendChild(o);
+  });
+
+  // Diet & allergy choices
+  const DIETS = ["vegan","vegetarian","pescatarian","gluten-free","dairy-free","diabetic-friendly","low-calorie","high-protein"];
+  const ALLERGIES = ["gluten","dairy","eggs","nuts","peanuts","shellfish","soy"];
+
+  function buildChoicePills(root, items, group){
+    root.innerHTML='';
+    items.forEach(name=>{
+      const id = `${group}-${name}`;
+      const btn = document.createElement('button');
+      btn.className='select-toggle';
+      btn.setAttribute('type','button');
+      btn.setAttribute('aria-pressed','false');
+      btn.textContent = name;
+      btn.addEventListener('click',()=>{
+        const set = state[group];
+        const on = !set.includes(name);
+        if(on){ set.push(name); } else { state[group] = set.filter(x=>x!==name); }
+        btn.setAttribute('aria-pressed', String(on));
+        persist();
+      });
+      root.appendChild(btn);
+    });
+  }
+
+  buildChoicePills(dietChoices, DIETS, 'diet');
+  buildChoicePills(allergyChoices, ALLERGIES, 'allergies');
+
+  // Restore from localStorage
+  (function restore(){
+    const raw = localStorage.getItem('tanda-plan');
+    if(!raw) return;
+    try{
+      const d = JSON.parse(raw);
+      ['servings','days','budget','time','calories'].forEach(k=>{ if(d[k]!=null){ state[k]=d[k]; document.getElementById(k).value=d[k]; if(k==='time') timeVal.textContent=d[k]; if(k==='calories') calVal.textContent=d[k]; }); });
+      state.diet = d.diet||[]; state.allergies = d.allergies||[]; state.ingredients = d.ingredients||state.ingredients;
+      // update toggles visual
+      Array.from(dietChoices.children).forEach(btn=>btn.setAttribute('aria-pressed', String(state.diet.includes(btn.textContent))));
+      Array.from(allergyChoices.children).forEach(btn=>btn.setAttribute('aria-pressed', String(state.allergies.includes(btn.textContent))));
+    }catch(e){}
+  })();
+
+  // Update state on numeric/range inputs
+  [servings,days,budget,timeRange,calRange].forEach(inp=>{
+    inp.addEventListener('input',()=>{ state[inp.id] = Number(inp.value); persist(); updatePlan(); });
+  });
+
+  // Ingredient chips rendering
+  function renderIngredients(){
+    ingChips.innerHTML='';
+    state.ingredients.forEach((ing,i)=>{
+      const el=document.createElement('span');el.className='chip';
+      el.innerHTML=`<span>${ing}</span>`;
+      const rm=document.createElement('button');rm.type='button';rm.setAttribute('aria-label',`remove ${ing}`);rm.textContent='×';
+      rm.addEventListener('click',()=>{ state.ingredients.splice(i,1); renderIngredients(); updatePlan(); persist(); });
+      el.appendChild(rm); ingChips.appendChild(el);
+    });
+  }
+  renderIngredients();
+
+  function addIngredientFromInput(){
+    const val = manualIng.value.trim().toLowerCase();
+    if(!val) return;
+    if(!state.ingredients.includes(val)) state.ingredients.push(val);
+    manualIng.value=''; renderIngredients(); persist(); updatePlan();
+  }
+
+  // Drag & drop / file picker for fridge photo
+  ;['dragenter','dragover'].forEach(ev=>dropzone.addEventListener(ev, e=>{ e.preventDefault(); dropzone.classList.add('drag'); }));
+  ;['dragleave','drop'].forEach(ev=>dropzone.addEventListener(ev, e=>{ e.preventDefault(); dropzone.classList.remove('drag'); }));
+  dropzone.addEventListener('drop', e=>{ const file = e.dataTransfer.files[0]; if(file) handleImage(file); });
+  fileInput.addEventListener('change', e=>{ const file = e.target.files[0]; if(file) handleImage(file); });
+
+  function handleImage(file){
+    const detected = fakeDetectIngredientsFromImage(file.name);
+    // merge unique
+    detected.forEach(x=>{ if(!state.ingredients.includes(x)) state.ingredients.push(x); });
+    renderIngredients(); persist(); announce(`Detected: ${detected.join(', ')}`);
+  }
+
+  function fakeDetectIngredientsFromImage(filename){
+    const name = (filename||'').toLowerCase();
+    const hits = ALL_INGREDIENTS.filter(ing => name.includes(ing));
+    if(hits.length>0) return [...new Set(hits)];
+    // fallback: 5 random ingredients
+    const shuffled = [...ALL_INGREDIENTS].sort(()=>Math.random()-.5);
+    return Array.from(new Set(shuffled.slice(0,5)));
+  }
+
+  // Suggestions generation
+  function generateSuggestions(){
+    const matches = RECIPE_DB.map(r=>{
+      let score = 0;
+      // Diet filter: if user set diets, recipe must include at least one compatible tag
+      if(state.diet.length){
+        const ok = state.diet.some(tag => r.diet.includes(tag));
+        if(!ok) return null;
+        score += 2;
+      }
+      // Allergies: crude filter by excluding known terms
+      const bad = state.allergies.some(a => r.ingredients.includes(a) || r.title.toLowerCase().includes(a));
+      if(bad) return null;
+      // Time & calories proximity
+      if(r.time <= state.time) score += 2; else score -= 1;
+      const calDiff = Math.abs(r.calories - state.calories); score += (calDiff<=100)?2:(calDiff<=200?1:0);
+      // Ingredient overlap
+      const have = r.ingredients.filter(i=>state.ingredients.includes(i));
+      score += have.length; // 1 point per overlap
+      return {r, score, haveCount: have.length};
+    }).filter(Boolean)
+      .sort((a,b)=> b.score - a.score)
+      .slice(0, Math.max(6, state.days+1));
+
+    // Render cards
+    recipeCards.innerHTML='';
+    matches.forEach(({r,haveCount})=>{
+      const card=document.createElement('article');card.className='recipe';
+      card.innerHTML = `
+        <h3>${r.title}</h3>
+        <div class="meta">
+          <span class="badge">⏱ ${r.time} min</span>
+          <span class="badge">🔥 ${r.calories} kcal</span>
+          <span class="badge">£ ${r.pricePerServing.toFixed(2)}/serving</span>
+          ${r.diet.map(d=>`<span class="badge">${d}</span>`).join('')}
+          <span class="badge">✔ ${haveCount} from your fridge</span>
+        </div>
+        <div class="ing"><strong>Ingredients:</strong> ${r.ingredients.join(', ')}</div>
+        <details style="margin-top:.6rem"><summary>Steps</summary>${r.steps.map(s=>`<p>• ${s}</p>`).join('')}</details>
+      `;
+      const btn=document.createElement('button');
+      btn.className='select-toggle';
+      btn.setAttribute('type','button');
+      btn.textContent='Add to plan';
+      const selected = state.selected.has(r.id);
+      btn.setAttribute('aria-pressed', String(selected));
+      if(selected) btn.textContent='In plan';
+      btn.addEventListener('click',()=>{
+        if(state.selected.has(r.id)){ state.selected.delete(r.id); btn.textContent='Add to plan'; btn.setAttribute('aria-pressed','false'); }
+        else { state.selected.add(r.id); btn.textContent='In plan'; btn.setAttribute('aria-pressed','true'); }
+        updatePlan();
+      });
+      const foot=document.createElement('footer'); foot.appendChild(btn);
+      card.appendChild(foot);
+      recipeCards.appendChild(card);
+    });
+
+    // Auto-pick top N if nothing selected
+    if(state.selected.size===0){
+      Array.from(recipeCards.querySelectorAll('.recipe')).slice(0,state.days).forEach(card=>{
+        const btn = card.querySelector('button'); btn.click();
+      });
+    }
+    updatePlan();
+  }
+
+  function updatePlan(){
+    selCount.textContent = state.selected.size;
+    const chosen = RECIPE_DB.filter(r=>state.selected.has(r.id));
+    // build required ingredients and subtract what we have
+    const need = new Map();
+    chosen.forEach(r=>{
+      r.ingredients.forEach(ing=>{
+        if(!state.ingredients.includes(ing)){
+          need.set(ing, (need.get(ing)||0) + 1 * Math.max(1, Math.ceil(state.servings/3))); // rough scaling
+        }
+      });
+    });
+    // render list + estimate cost
+    shopList.innerHTML='';
+    let total = 0;
+    Array.from(need.entries()).sort((a,b)=>a[0].localeCompare(b[0])).forEach(([ing,qty])=>{
+      const li=document.createElement('li');
+      const unitCost = COST_TABLE[ing] || 0.6; // default
+      const cost = unitCost * qty;
+      total += cost;
+      li.textContent = `${ing} × ${qty} — £${cost.toFixed(2)}`;
+      shopList.appendChild(li);
+    });
+    basketEl.textContent = `£${total.toFixed(2)}`;
+    const left = Math.max(0, state.budget - total);
+    budgetLeft.textContent = `£${left.toFixed(2)}`;
+    persist();
+  }
+
+  function exportListTxt(){
+    const lines = [
+      `TANDA Shopping List`,
+      `Servings: ${state.servings}  Days: ${state.days}`,
+      `Budget: £${state.budget}`,
+      `Selected recipes: ${[...state.selected].join(', ')}`,
+      `\nMissing ingredients:`,
+      ...Array.from(shopList.querySelectorAll('li')).map(li=>`- ${li.textContent}`)
+    ];
+    const blob = new Blob([lines.join('\n')], {type:'text/plain'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'tanda-shopping-list.txt';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function persist(){
+    const payload = {
+      servings: state.servings = Number(servings.value),
+      days: state.days = Number(days.value),
+      budget: state.budget = Number(budget.value),
+      time: state.time = Number(timeRange.value),
+      calories: state.calories = Number(calRange.value),
+      diet: state.diet, allergies: state.allergies, ingredients: state.ingredients
+    };
+    localStorage.setItem('tanda-plan', JSON.stringify(payload));
+  }
+
+  function announce(msg){
+    const el=document.createElement('div');
+    el.textContent=msg; el.style.position='fixed';el.style.left='50%';el.style.top='20px';el.style.transform='translateX(-50%)';
+    el.style.background='var(--ink)';el.style.color='#fff';el.style.padding='8px 12px';el.style.borderRadius='999px';el.style.boxShadow='var(--shadow-sm)';
+    document.body.appendChild(el); setTimeout(()=>el.remove(),1800);
+  }
+
+  // kick things off
+  renderIngredients();
+  generateSuggestions();
+
+  </script>
+</body>
+</html>
